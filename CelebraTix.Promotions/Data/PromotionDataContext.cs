@@ -1,7 +1,7 @@
 using CelebraTix.Promotions.Venues;
 using Microsoft.EntityFrameworkCore;
 
-namespace CelebraTix.Promotions.Promotions.Data;
+namespace CelebraTix.Promotions.Data;
 
 public class PromotionDataContext : DbContext
 {
@@ -16,7 +16,7 @@ public class PromotionDataContext : DbContext
         builder.Entity<Venues.Venue>().HasKey(v => v.VenueGuid);
     }
 
-    public async Task<Venue> EnsureVenueExists(Guid venueGuid)
+    public async Task<Venue> GetOrInsertVenue(Guid venueGuid)
     {
         var venue = await Venues.FirstOrDefaultAsync(v => v.VenueGuid == venueGuid);
 
