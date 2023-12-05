@@ -1,6 +1,7 @@
-using CelebraTix.Promotions.Promotions.Data;
-using CelebraTix.Promotions.Venues;
+using CelebraTix.Promotions.Data;
 using Microsoft.EntityFrameworkCore;
+
+namespace CelebraTix.Promotions.Venues;
 
 public class VenueQueries
 {
@@ -36,7 +37,7 @@ public class VenueQueries
         return venue == null ? null : MapVenue(venue.VenueGuid, null);
     }
 
-    private VenueInfo MapVenue(Guid venueGuid, VenueDescription venueDescription) 
+    private VenueInfo MapVenue(Guid venueGuid, VenueDescription venueDescription)
         => new VenueInfo
         {
             VenueGuid = venueGuid,

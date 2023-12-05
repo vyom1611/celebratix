@@ -1,8 +1,6 @@
+using CelebraTix.Promotions.Data;
 
-using CelebraTix.Promotions.Promotions.Data;
-using CelebraTix.Promotions.Venues;
-
-namespace CelebraTix.Promotion.Venues
+namespace CelebraTix.Promotions.Venues
 {
     public class VenueCommands
     {
