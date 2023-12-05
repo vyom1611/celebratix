@@ -1,4 +1,4 @@
-namespace TicketerApplication.Models;
+namespace CelebraTix.Promotions.Models;
 
 public class ErrorViewModel
 {

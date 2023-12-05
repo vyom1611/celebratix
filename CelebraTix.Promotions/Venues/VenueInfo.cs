@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TicketerApplication.Venue;
+namespace CelebraTix.Promotions.Venues;
 
 public class VenueInfo
 {
@@ -8,13 +8,10 @@ public class VenueInfo
     public string Name { get; set; }
     public string City { get; set; }
     public long LastModifiedTicks { get; set; }
-    [Required]
-    public string TimeZone { get; set; }
+    [Required] public string TimeZone { get; set; }
     public long TimeZoneLastModifiedTicks { get; set; }
-    [Required]
-    public float? Latitude { get; set; }
-    [Required]
-    public float? Longitude { get; set; }
+    [Required] public float? Latitude { get; set; }
+    [Required] public float? Longitude { get; set; }
     public long LocationLastModifiedTicks { get; set; }
 
     public static VenueInfo FromEntities(
