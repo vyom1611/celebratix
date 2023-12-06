@@ -8,21 +8,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.14" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.14" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.14">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
+        <PackageReference Include="Elasticsearch.Net" Version="7.17.5"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.14"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.14"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.14">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Migrations\"/>
     </ItemGroup>
 
 </Project>
