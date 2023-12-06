@@ -1,53 +1,58 @@
 using CelebraTix.Promotions.Data;
 
-namespace CelebraTix.Promotions.Venues
+namespace CelebraTix.Promotions.Venues;
+
+public class VenueCommands
 {
-    public class VenueCommands
+    private readonly PromotionDataContext repository;
+
+    public VenueCommands(PromotionDataContext repository)
     {
-        private readonly PromotionDataContext repository;
+        this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+    }
 
-        public VenueCommands(PromotionDataContext repository)
-        {
-            this.repository = repository;
-        }
+    public async Task SaveVenue(VenueInfo venueModel)
+    {
+        var venue = await GetOrInsertVenueAsync(venueModel.VenueGuid);
+        AddVenueDescription(venue, venueModel);
+        await SaveChangesAsync();
+    }
 
-        public async Task SaveVenue(VenueInfo venueModel)
-        {
-            var venue = await GetOrInsertVenueAsync(venueModel.VenueGuid);
-            await AddVenueDescriptionAsync(venue, venueModel);
-            await repository.SaveChangesAsync().ConfigureAwait(false);
-        }
+    public async Task DeleteVenue(Guid venueGuid)
+    {
+        var venue = await GetOrInsertVenueAsync(venueGuid);
+        AddVenueRemoved(venue);
+        await SaveChangesAsync();
+    }
 
-        public async Task DeleteVenue(Guid venueGuid)
-        {
-            var venue = await GetOrInsertVenueAsync(venueGuid);
-            await AddVenueRemovedAsync(venue);
-            await repository.SaveChangesAsync().ConfigureAwait(false);
-        }
+    private async Task<Venue> GetOrInsertVenueAsync(Guid venueGuid)
+    {
+        return await repository.GetOrInsertVenue(venueGuid)
+            .ConfigureAwait(false) ?? throw new InvalidOperationException("Venue could not be found or created.");
+    }
 
-        private async Task<Venue> GetOrInsertVenueAsync(Guid venueGuid)
+    private void AddVenueDescription(Venue venue, VenueInfo venueModel)
+    {
+        repository.Add(new VenueDescription
         {
-            return await repository.GetOrInsertVenue(venueGuid).ConfigureAwait(false);
-        }
+            ModifiedDate = DateTime.UtcNow,
+            Venue = venue,
+            Name = venueModel.Name,
+            City = venueModel.City
+        });
+    }
 
-        private async Task AddVenueDescriptionAsync(Venue venue, VenueInfo venueModel)
+    private void AddVenueRemoved(Venue venue)
+    {
+        repository.Add(new VenueRemoved
         {
-            await repository.AddAsync(new VenueDescription
-            {
-                ModifiedDate = DateTime.UtcNow,
-                Venue = venue,
-                Name = venueModel.Name,
-                City = venueModel.City
-            }).ConfigureAwait(false);
-        }
+            Venue = venue,
+            RemovedDate = DateTime.UtcNow
+        });
+    }
 
-        private async Task AddVenueRemovedAsync(Venue venue)
-        {
-            await repository.AddAsync(new VenueRemoved
-            {
-                Venue = venue,
-                RemovedDate = DateTime.UtcNow
-            }).ConfigureAwait(false);
-        }
+    private async Task SaveChangesAsync()
+    {
+        await repository.SaveChangesAsync().ConfigureAwait(false);
     }
 }
