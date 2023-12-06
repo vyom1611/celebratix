@@ -1,7 +1,17 @@
+using System.Configuration;
+using CelebraTix.Promotions.Data;
+using CelebraTix.Promotions.Venues;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<PromotionDataContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PromotionContext")));
+
+builder.Services.AddScoped<VenueQueries>();
+builder.Services.AddScoped<VenueCommands>();
 
 var app = builder.Build();
 
