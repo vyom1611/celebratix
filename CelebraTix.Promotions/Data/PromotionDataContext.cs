@@ -10,10 +10,23 @@ public class PromotionDataContext : DbContext
     }
 
     public DbSet<Venue> Venues { get; set; }
+    public DbSet<VenueDescription> VenueDescription { get; set; }
+    public DbSet<VenueLocation> VenueLocation { get; set; }
+    public DbSet<VenueTimeZone> VenueTimeZone { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        builder.Entity<Venues.Venue>().HasKey(v => v.VenueGuid);
+        modelBuilder.Entity<Venue>()
+            .HasAlternateKey(venue => new { venue.VenueGuid });
+
+        modelBuilder.Entity<VenueDescription>()
+            .HasAlternateKey(venueDescription => new { venueDescription.VenueId, venueDescription.ModifiedDate });
+
+        modelBuilder.Entity<VenueLocation>()
+            .HasAlternateKey(venueLocation => new { venueLocation.VenueId, venueLocation.ModifiedDate });
+
+        modelBuilder.Entity<VenueTimeZone>()
+            .HasAlternateKey(venueTimeZone => new { venueTimeZone.VenueId, venueTimeZone.ModifiedDate });
     }
 
     public async Task<Venue> GetOrInsertVenue(Guid venueGuid)
