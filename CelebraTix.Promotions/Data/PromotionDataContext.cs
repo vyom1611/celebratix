@@ -1,3 +1,4 @@
+using CelebraTix.Promotions.Acts;
 using CelebraTix.Promotions.Venues;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ public class PromotionDataContext : DbContext
     {
     }
 
+    public DbSet<Act> Act { get; set; }
     public DbSet<Venue> Venues { get; set; }
     public DbSet<VenueDescription> VenueDescription { get; set; }
     public DbSet<VenueLocation> VenueLocation { get; set; }
@@ -16,6 +18,9 @@ public class PromotionDataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Act>()
+            .HasAlternateKey(act => new { act.ActGuid });
+        
         modelBuilder.Entity<Venue>()
             .HasAlternateKey(venue => new { venue.VenueGuid });
 
