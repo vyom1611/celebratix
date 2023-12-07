@@ -39,6 +39,8 @@ The system is designed to follow a microservices architecture, enhancing scalabi
 - **Messaging System**: Powered by MassTransit and RabbitMQ.
 - **Web Interface**: Providing a management interface for users.
 
+<img width="1440" alt="Screenshot 2023-12-06 at 4 45 04 PM" src="https://github.com/vyom1611/celebratix/assets/93402393/3f93bfd1-588c-411a-a653-e4c801feb0a0">
+
 ## Getting Started
 (Note: These steps will be applicable once the project is complete)
 1. **Clone the Repository**: `git clone https://github.com/vyom1611/CelebraTix.git`
