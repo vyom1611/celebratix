@@ -46,4 +46,20 @@ public class PromotionDataContext : DbContext
 
         return venue;
     }
+    
+    public async Task<Act> GetOrInsertAct(Guid actGuid)
+    {
+        var act = await Act
+            .Include(a => a.Descriptions)
+            .FirstOrDefaultAsync(a => a.ActGuid == actGuid);
+
+        if (act == null)
+        {
+            act = new Act { ActGuid = actGuid };
+            Act.Add(act);
+            // You might choose to call SaveChangesAsync here or leave it to be called explicitly outside this method
+        }
+
+        return act;
+    }
 }
