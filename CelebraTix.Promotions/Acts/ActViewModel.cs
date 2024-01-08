@@ -1,3 +1,5 @@
+using CelebraTix.Promotions.Shows;
+
 namespace CelebraTix.Promotions.Acts;
 
 public class ActViewModel
