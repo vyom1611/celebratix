@@ -1,4 +1,5 @@
 using CelebraTix.Promotions.Acts;
+using CelebraTix.Promotions.Shows;
 using CelebraTix.Promotions.Venues;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ public class PromotionDataContext : DbContext
     public DbSet<VenueDescription> VenueDescription { get; set; }
     public DbSet<VenueLocation> VenueLocation { get; set; }
     public DbSet<VenueTimeZone> VenueTimeZone { get; set; }
+    public DbSet<Show> Show { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,6 +34,13 @@ public class PromotionDataContext : DbContext
 
         modelBuilder.Entity<VenueTimeZone>()
             .HasAlternateKey(venueTimeZone => new { venueTimeZone.VenueId, venueTimeZone.ModifiedDate });
+        
+        modelBuilder.Entity<Show>()
+            .HasAlternateKey(show => new { show.ActId, show.VenueId, show.StartTime });
+
+        modelBuilder.Entity<ShowCancelled>()
+            .HasAlternateKey(showCancelled => new { showCancelled.ShowId, showCancelled.CancelledDate });
+
     }
 
     public async Task<Venue> GetOrInsertVenue(Guid venueGuid)
@@ -61,5 +70,27 @@ public class PromotionDataContext : DbContext
         }
 
         return act;
+    }
+
+    public async Task<Show> GetOrInsertShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
+    {
+        var show = Show
+            .Where(show =>
+                show.Act.ActGuid == actGuid &&
+                show.Venue.VenueGuid == venueGuid &&
+                show.StartTime == startTime)
+            .SingleOrDefault();
+        if (show == null)
+        {
+            show = new Show
+            {
+                Act = await GetOrInsertAct(actGuid),
+                Venue = await GetOrInsertVenue(venueGuid),
+                StartTime = startTime
+            };
+            await base.AddAsync(show);
+        }
+
+        return show;
     }
 }

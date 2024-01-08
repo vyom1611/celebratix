@@ -5,44 +5,52 @@ namespace CelebraTix.Promotions.Venues;
 
 public class VenueQueries
 {
-    private readonly PromotionDataContext context;
+    private readonly PromotionDataContext repository;
 
-    public VenueQueries(PromotionDataContext context)
+    public VenueQueries(PromotionDataContext repository)
     {
-        this.context = context;
+        this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
     public async Task<List<VenueInfo>> ListVenues()
     {
-        var venues = await context.Venues
+        var venues = await repository.Venues
+            .Where(venue => !venue.Removed.Any())
+            .Select(venue => new
+            {
+                venue.VenueGuid,
+                Descriptions = venue.Descriptions.OrderByDescending(d => d.ModifiedDate).FirstOrDefault()
+            })
+            .ToListAsync();
+
+        return venues.Select(v => new VenueInfo
+        {
+            VenueGuid = v.VenueGuid,
+            Name = v.Descriptions?.Name,
+            City = v.Descriptions?.City,
+            LastModifiedTicks = v.Descriptions?.ModifiedDate.Ticks ?? 0
+        }).ToList();
+    }
+
+    public async Task<VenueInfo> GetVenue(Guid venueGuid)
+    {
+        var result = await repository.Venues
+            .Where(venue => venue.VenueGuid == venueGuid && !venue.Removed.Any())
             .Select(venue => new
             {
                 venue.VenueGuid,
                 Description = venue.Descriptions.OrderByDescending(d => d.ModifiedDate).FirstOrDefault()
             })
-            .ToListAsync()
-            .ConfigureAwait(false);
+            .SingleOrDefaultAsync();
 
-        return venues.Select(row => MapVenue(row.VenueGuid, row.Description)).ToList();
-    }
+        if (result == null) return null;
 
-    public async Task<VenueInfo> GetVenue(Guid venueGuid)
-    {
-        var venue = await context.Venues
-            .Where(venue => venue.VenueGuid == venueGuid)
-            .Select(venue => new { venue.VenueGuid })
-            .SingleOrDefaultAsync()
-            .ConfigureAwait(false);
-
-        return venue == null ? null : MapVenue(venue.VenueGuid, null);
-    }
-
-    private VenueInfo MapVenue(Guid venueGuid, VenueDescription venueDescription)
-        => new VenueInfo
+        return new VenueInfo
         {
-            VenueGuid = venueGuid,
-            Name = venueDescription?.Name,
-            City = venueDescription?.City,
-            LastModifiedTicks = venueDescription?.ModifiedDate.Ticks ?? 0
+            VenueGuid = result.VenueGuid,
+            Name = result.Description?.Name,
+            City = result.Description?.City,
+            LastModifiedTicks = result.Description?.ModifiedDate.Ticks ?? 0
         };
+    }
 }

@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="Elasticsearch.Net" Version="7.17.5"/>
+        <PackageReference Include="MassTransit" Version="8.1.4-develop.1638"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.14"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.14"/>
@@ -24,11 +25,16 @@
         </PackageReference>
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11"/>
+        <PackageReference Include="RabbitMQ" Version="3.6.2"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
 
     <ItemGroup>
         <Folder Include="Migrations\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Celebratix.Promotions.Messages\Celebratix.Promotions.Messages.csproj"/>
     </ItemGroup>
 
 </Project>
